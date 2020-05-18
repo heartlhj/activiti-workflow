@@ -2,7 +2,7 @@ package com.gogoing.workflow.controller;
 
 import com.gogoing.workflow.domain.ProcessStartParam;
 import com.gogoing.workflow.domain.ProcessStartResult;
-import com.gogoing.workflow.service.ProcessProcInstanceService;
+import com.gogoing.workflow.service.ProcessInstanceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProcessProcInstanceController {
 
     @Autowired
-    private ProcessProcInstanceService processProcInstanceService;
+    private ProcessInstanceService processInstanceService;
     /**
      * 启动流程实例（通过流程定义key来启动）
      * @return 启动结果
@@ -31,6 +31,6 @@ public class ProcessProcInstanceController {
     @ApiOperation(value = "启动流程实例")
     @PostMapping("/startProcInstance")
     public ProcessStartResult startProcInstance(ProcessStartParam startProcessParam) {
-        return processProcInstanceService.startProcInstanceByKey(startProcessParam);
+        return processInstanceService.startProcInstanceByKey(startProcessParam);
     }
 }

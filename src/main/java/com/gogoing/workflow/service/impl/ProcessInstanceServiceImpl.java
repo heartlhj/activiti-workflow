@@ -3,7 +3,7 @@ package com.gogoing.workflow.service.impl;
 import com.gogoing.workflow.domain.ProcessStartParam;
 import com.gogoing.workflow.domain.ProcessStartResult;
 import com.gogoing.workflow.exception.ProcessException;
-import com.gogoing.workflow.service.ProcessProcInstanceService;
+import com.gogoing.workflow.service.ProcessInstanceService;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
@@ -22,7 +22,7 @@ import javax.annotation.Resource;
  */
 @Service
 @Slf4j
-public class ProcessProcInstanceServiceImpl implements ProcessProcInstanceService {
+public class ProcessInstanceServiceImpl implements ProcessInstanceService {
 
     @Resource
     private RuntimeService runtimeService;

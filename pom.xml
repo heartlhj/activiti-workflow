@@ -74,6 +74,11 @@
 			<artifactId>activiti-json-converter</artifactId>
 			<version>${activiti.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-bpmn-layout</artifactId>
+            <version>6.0.0</version>
+        </dependency>
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>

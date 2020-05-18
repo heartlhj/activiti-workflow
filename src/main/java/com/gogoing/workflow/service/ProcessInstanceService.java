@@ -8,7 +8,7 @@ import com.gogoing.workflow.domain.ProcessStartResult;
  * 流程实例管理Service组件
  * @author lhj
  */
-public interface ProcessProcInstanceService {
+public interface ProcessInstanceService {
 
     /**
      * 启动流程实例（通过流程定义key来启动）
