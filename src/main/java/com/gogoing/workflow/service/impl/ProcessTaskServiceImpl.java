@@ -2,13 +2,17 @@ package com.gogoing.workflow.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.github.pagehelper.util.StringUtil;
-import com.gogoing.workflow.domain.CompleteTaskParam;
-import com.gogoing.workflow.domain.TaskAttachmentParam;
+import com.gogoing.workflow.domain.*;
 import com.gogoing.workflow.exception.ProcessException;
+import com.gogoing.workflow.mapper.CustomActivitiDatabaseMapper;
 import com.gogoing.workflow.service.ProcessTaskService;
+import com.gogoing.workflow.utils.PageUtil;
+import org.activiti.engine.ManagementService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.impl.cmd.AbstractCustomSqlExecution;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;
@@ -20,11 +24,15 @@ import java.util.Map;
  * @description: 任务服务
  * @date 2020-5-18 22:28
  */
+@Service
 public class ProcessTaskServiceImpl implements ProcessTaskService {
 
 
     @Autowired
     private TaskService taskService;
+
+    @Autowired
+    private ManagementService managementService;
     /**
      * 完成任务
      *
@@ -67,5 +75,29 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
         taskService.complete(param.getTaskId(), variables);
 
         return Boolean.TRUE;
+    }
+
+    /**
+     *  查询待审批任务
+     * @param taskUnFinishQuery 查询条件
+     * @return
+     */
+    @Override
+    public PageBean<ProcessTaskResult> queryUnFinishTask(TaskUnFinishQuery taskUnFinishQuery){
+        List<ProcessTaskResult> list = managementService.executeCustomSql(new AbstractCustomSqlExecution<CustomActivitiDatabaseMapper, List<ProcessTaskResult>>(CustomActivitiDatabaseMapper.class) {
+            @Override
+            public List<ProcessTaskResult> execute(CustomActivitiDatabaseMapper customActivitiDatabaseMapper) {
+                return customActivitiDatabaseMapper.selectUnFinishTask(taskUnFinishQuery);
+            }
+        });
+
+        Long count = managementService.executeCustomSql(new AbstractCustomSqlExecution<CustomActivitiDatabaseMapper, Long>(CustomActivitiDatabaseMapper.class) {
+            @Override
+            public Long execute(CustomActivitiDatabaseMapper customActivitiDatabaseMapper) {
+                return customActivitiDatabaseMapper.selectUnFinishTaskCount(taskUnFinishQuery);
+            }
+        });
+        PageUtil<ProcessTaskResult, TaskUnFinishQuery> pageUtil = new PageUtil<>();
+        return pageUtil.buildPage(list,taskUnFinishQuery,count);
     }
 }

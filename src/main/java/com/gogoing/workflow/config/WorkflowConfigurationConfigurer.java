@@ -1,6 +1,10 @@
 package com.gogoing.workflow.config;
 
+import com.gogoing.workflow.bpmn.converter.CustomUserTaskXMLConverter;
+import com.gogoing.workflow.bpmn.handler.CustomUserTaskParseHandler;
+import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.engine.delegate.event.ActivitiEventListener;
+import org.activiti.engine.parse.BpmnParseHandler;
 import org.activiti.spring.SpringProcessEngineConfiguration;
 import org.activiti.spring.boot.ProcessEngineConfigurationConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +36,11 @@ public class WorkflowConfigurationConfigurer implements ProcessEngineConfigurati
 //        eventListeners.add(workflowEventListener);
         processEngineConfiguration.setEventListeners(eventListeners);
 
+        List<BpmnParseHandler> postBpmnParseHandlers = new ArrayList<>();
+        postBpmnParseHandlers.add(new CustomUserTaskParseHandler());
+        processEngineConfiguration.setPostBpmnParseHandlers(postBpmnParseHandlers);
+
+        BpmnXMLConverter.addConverter(new CustomUserTaskXMLConverter());
     }
 
 

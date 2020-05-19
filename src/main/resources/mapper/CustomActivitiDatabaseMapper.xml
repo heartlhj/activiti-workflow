@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gogoing.workflow.mapper.CustomActivitiDatabaseMapper">
+
+    <insert id="insertIdentityInfoByNotify" parameterType="org.activiti.engine.impl.persistence.entity.IdentityLinkEntityImpl">
+    insert into ${prefix}ACT_RU_IDENTITYLINK (ID_, REV_, TYPE_, USER_ID_, GROUP_ID_, TASK_ID_, PROC_INST_ID_, PROC_DEF_ID_)
+    values (#{id, jdbcType=VARCHAR},
+            1,
+            #{type, jdbcType=VARCHAR},
+            #{userId, jdbcType=VARCHAR},
+            #{groupId, jdbcType=VARCHAR},
+            #{taskId, jdbcType=VARCHAR},
+            #{processInstanceId, jdbcType=VARCHAR},
+            #{processDefId, jdbcType=VARCHAR})
+  </insert>
+
+
+
+    <select id="selectUnFinishTask" parameterType="org.activiti.engine.impl.persistence.entity.TaskEntityImpl" resultMap="taskResultMap">
+        SELECT DISTINCT
+        RES.ID_,
+        RES.NAME_,
+        RES.ASSIGNEE_,
+        D.NAME_ AS PROC_NAME_,
+        D.KEY_ AS PROC_KEY_,
+        E.BUSINESS_KEY_
+        FROM
+        ACT_RU_TASK RES
+        LEFT JOIN ACT_RU_IDENTITYLINK I ON I.TASK_ID_ = RES.ID_
+        INNER JOIN ACT_RE_PROCDEF D ON RES.PROC_DEF_ID_ = D.ID_
+        INNER JOIN ACT_RU_EXECUTION E ON RES.PROC_INST_ID_ = E.ID_
+        <trim prefix="WHERE" prefixOverrides="and|or">
+            <if test="businessKeys != null">
+                <trim prefix=" E.BUSINESS_KEY in (" prefixOverrides="and" suffix =")" suffixOverrides=",">
+                    <foreach collection="businessKeys" item="key" separator=",">
+                        #{key}
+                    </foreach>
+                </trim>
+            </if>
+            <choose>
+                <when test="startTime != null and endTime != null ">
+                    and RES.START_TIME_ between #{startTime} and #{endTime}
+                </when>
+                <when test="startTime != null and endTime == null">
+                    and RES.START_TIME_ &gt;= #{startTime}
+                </when>
+                <when test="startTime == null and endTime != null">
+                    and RES.START_TIME_ &lt;= #{endTime}
+                </when>
+                <otherwise>
+
+                </otherwise>
+            </choose>
+            <if test="startUserId != null and startUserId != '' ">
+                AND I.TYPE_ = 'starter' AND I.USER_ID_ = #{startUserId}
+            </if>
+            <if test="userId != null and userId != '' ">
+                AND RES.ASSIGNEE_ = #{userId}
+                OR (
+                RES.ASSIGNEE_ IS NULL
+                AND I.TYPE_ = 'candidate'
+                AND ( I.USER_ID_ = #{userId} ))
+                OR (
+                RES.ASSIGNEE_ IS NULL
+                AND I.TYPE_ = 'notify'
+                AND ( I.USER_ID_ = #{userId} ))
+            </if>
+        </trim>
+    </select>
+
+    <select id="selectUnFinishTaskCount" parameterType="org.activiti.engine.impl.persistence.entity.TaskEntityImpl" resultType="java.lang.Long">
+        SELECT DISTINCT
+        count( DISTINCT RES.ID_)
+        FROM
+        ACT_RU_TASK RES
+        LEFT JOIN ACT_RU_IDENTITYLINK I ON I.TASK_ID_ = RES.ID_
+        INNER JOIN ACT_RE_PROCDEF D ON RES.PROC_DEF_ID_ = D.ID_
+        INNER JOIN ACT_RU_EXECUTION E ON RES.PROC_INST_ID_ = E.ID_
+        <trim prefix="WHERE" prefixOverrides="and|or">
+            <if test="businessKeys != null">
+                <trim prefix=" E.BUSINESS_KEY in (" prefixOverrides="and" suffix =")" suffixOverrides=",">
+                    <foreach collection="businessKeys" item="key" separator=",">
+                        #{key}
+                    </foreach>
+                </trim>
+            </if>
+            <choose>
+                <when test="startTime != null and endTime != null ">
+                    and RES.START_TIME_ between #{startTime} and #{endTime}
+                </when>
+                <when test="startTime != null and endTime == null">
+                    and RES.START_TIME_ &gt;= #{startTime}
+                </when>
+                <when test="startTime == null and endTime != null">
+                    and RES.START_TIME_ &lt;= #{endTime}
+                </when>
+                <otherwise>
+
+                </otherwise>
+            </choose>
+            <if test="startUserId != null and startUserId != '' ">
+                AND I.TYPE_ = 'starter' AND I.USER_ID_ = #{startUserId}
+            </if>
+            <if test="userId != null and userId != '' ">
+                AND RES.ASSIGNEE_ = #{userId}
+                OR (
+                RES.ASSIGNEE_ IS NULL
+                AND I.TYPE_ = 'candidate'
+                AND ( I.USER_ID_ = #{userId} ))
+                OR (
+                RES.ASSIGNEE_ IS NULL
+                AND I.TYPE_ = 'notify'
+                AND ( I.USER_ID_ = #{userId} ))
+            </if>
+        </trim>
+    </select>
+
+    <resultMap id="taskResultMap" type="com.gogoing.workflow.domain.ProcessTaskResult">
+        <id property="taskId" column="ID_" jdbcType="VARCHAR"/>
+        <result property="taskDefineName" column="NAME_" jdbcType="VARCHAR"/>
+        <result property="assignee" column="ASSIGNEE_" jdbcType="VARCHAR"/>
+        <result property="processInstanceId" column="PROC_INST_ID_" jdbcType="VARCHAR" />
+        <result property="processDefinitionName" column="PROC_NAME_" jdbcType="VARCHAR" />
+        <result property="processDefinitionKey" column="PROC_KEY_" jdbcType="VARCHAR" />
+        <result property="businessKey" column="BUSINESS_KEY_" jdbcType="VARCHAR" />
+    </resultMap>
+</mapper>

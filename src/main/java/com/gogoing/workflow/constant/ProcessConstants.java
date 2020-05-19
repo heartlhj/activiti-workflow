@@ -1,9 +1,9 @@
 package com.gogoing.workflow.constant;
 
 /**
- * 模型数据的Json属性名
- * @author huangzh
- * @since 2020/1/6 18:41
+ * 流程常量
+ * @author lhj
+ * @since 2020/5/6 18:41
  */
 public final class ProcessConstants {
     private ProcessConstants() {
