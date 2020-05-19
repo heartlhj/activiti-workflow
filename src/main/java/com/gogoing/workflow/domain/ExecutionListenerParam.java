@@ -1,6 +1,5 @@
 package com.gogoing.workflow.domain;
 
-import com.deepexi.workflow.enums.ExecutionListenerEventEnum;
 import lombok.Data;
 import org.activiti.bpmn.model.ImplementationType;
 

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -84,6 +85,17 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
      */
     @Override
     public PageBean<ProcessTaskResult> queryUnFinishTask(TaskUnFinishQuery taskUnFinishQuery){
+        PageUtil<ProcessTaskResult, TaskUnFinishQuery> pageUtil = new PageUtil<>();
+        Long count = managementService.executeCustomSql(new AbstractCustomSqlExecution<CustomActivitiDatabaseMapper, Long>(CustomActivitiDatabaseMapper.class) {
+            @Override
+            public Long execute(CustomActivitiDatabaseMapper customActivitiDatabaseMapper) {
+                return customActivitiDatabaseMapper.selectUnFinishTaskCount(taskUnFinishQuery);
+            }
+        });
+        //没有查询到，就直接返回空
+        if(count <= 0){
+            return pageUtil.buildPage(Collections.emptyList(), taskUnFinishQuery, 0);
+        }
         List<ProcessTaskResult> list = managementService.executeCustomSql(new AbstractCustomSqlExecution<CustomActivitiDatabaseMapper, List<ProcessTaskResult>>(CustomActivitiDatabaseMapper.class) {
             @Override
             public List<ProcessTaskResult> execute(CustomActivitiDatabaseMapper customActivitiDatabaseMapper) {
@@ -91,13 +103,6 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
             }
         });
 
-        Long count = managementService.executeCustomSql(new AbstractCustomSqlExecution<CustomActivitiDatabaseMapper, Long>(CustomActivitiDatabaseMapper.class) {
-            @Override
-            public Long execute(CustomActivitiDatabaseMapper customActivitiDatabaseMapper) {
-                return customActivitiDatabaseMapper.selectUnFinishTaskCount(taskUnFinishQuery);
-            }
-        });
-        PageUtil<ProcessTaskResult, TaskUnFinishQuery> pageUtil = new PageUtil<>();
         return pageUtil.buildPage(list,taskUnFinishQuery,count);
     }
 }

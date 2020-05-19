@@ -16,7 +16,7 @@
 
 
 
-    <select id="selectUnFinishTask" parameterType="org.activiti.engine.impl.persistence.entity.TaskEntityImpl" resultMap="taskResultMap">
+    <select id="selectUnFinishTask" resultMap="taskResultMap">
         SELECT DISTINCT
         RES.ID_,
         RES.NAME_,
@@ -39,13 +39,13 @@
             </if>
             <choose>
                 <when test="startTime != null and endTime != null ">
-                    and RES.START_TIME_ between #{startTime} and #{endTime}
+                    and E.START_TIME_ between #{startTime} and #{endTime}
                 </when>
                 <when test="startTime != null and endTime == null">
-                    and RES.START_TIME_ &gt;= #{startTime}
+                    and E.START_TIME_ &gt;= #{startTime}
                 </when>
                 <when test="startTime == null and endTime != null">
-                    and RES.START_TIME_ &lt;= #{endTime}
+                    and E.START_TIME_ &lt;= #{endTime}
                 </when>
                 <otherwise>
 
@@ -68,7 +68,7 @@
         </trim>
     </select>
 
-    <select id="selectUnFinishTaskCount" parameterType="org.activiti.engine.impl.persistence.entity.TaskEntityImpl" resultType="java.lang.Long">
+    <select id="selectUnFinishTaskCount" resultType="java.lang.Long">
         SELECT DISTINCT
         count( DISTINCT RES.ID_)
         FROM

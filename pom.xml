@@ -118,6 +118,12 @@
 			<artifactId>mybatis-plus-boot-starter</artifactId>
 			<version>3.0.6</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.200</version>
+		</dependency>
         <!-- 分页相关依赖 -->
         <dependency>
             <groupId>com.github.pagehelper</groupId>

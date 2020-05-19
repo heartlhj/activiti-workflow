@@ -2,6 +2,7 @@ package com.gogoing.workflow.config;
 
 import com.gogoing.workflow.bpmn.converter.CustomUserTaskXMLConverter;
 import com.gogoing.workflow.bpmn.handler.CustomUserTaskParseHandler;
+import com.gogoing.workflow.mapper.CustomActivitiDatabaseMapper;
 import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.engine.delegate.event.ActivitiEventListener;
 import org.activiti.engine.parse.BpmnParseHandler;
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -35,6 +38,20 @@ public class WorkflowConfigurationConfigurer implements ProcessEngineConfigurati
         List<ActivitiEventListener> eventListeners =new ArrayList<>();
 //        eventListeners.add(workflowEventListener);
         processEngineConfiguration.setEventListeners(eventListeners);
+
+
+        Set<Class<?>> mappers = processEngineConfiguration.getCustomMybatisMappers();
+        if (mappers == null) {
+            mappers = new HashSet<>();
+        }
+        mappers.add(CustomActivitiDatabaseMapper.class);
+        processEngineConfiguration.setCustomMybatisMappers(mappers);
+        Set<String> mapperXmls = processEngineConfiguration.getCustomMybatisXMLMappers();
+        if (mapperXmls == null) {
+            mapperXmls = new HashSet<>();
+        }
+        mapperXmls.add("mapper/CustomActivitiDatabaseMapper.xml");
+        processEngineConfiguration.setCustomMybatisXMLMappers(mapperXmls);
 
         List<BpmnParseHandler> postBpmnParseHandlers = new ArrayList<>();
         postBpmnParseHandlers.add(new CustomUserTaskParseHandler());

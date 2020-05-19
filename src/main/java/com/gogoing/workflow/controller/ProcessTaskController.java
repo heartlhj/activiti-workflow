@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
  * @since 2020/04/27 10:42
  */
 @RestController
-@RequestMapping("/workflow/procTask")
+@RequestMapping("/workflow/processTask")
 @Api(value = "流程任务管理", tags = "流程任务管理")
 public class ProcessTaskController {
 
@@ -33,7 +33,7 @@ public class ProcessTaskController {
      * @return 待办任务列表
      */
     @ApiOperation(value = "待办任务查询")
-    @GetMapping("/listAssigneeTasks")
+    @GetMapping("/listUnFinishTasks")
     public PageBean<ProcessTaskResult> listAssigneeTasks(TaskUnFinishQuery processTaskQuery) {
         PageBean<ProcessTaskResult> taskResults = processTaskService.queryUnFinishTask(processTaskQuery);
         return taskResults;
