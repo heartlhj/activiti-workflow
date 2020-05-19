@@ -57,7 +57,7 @@ public class ProcessCreateTaskParam {
     /**
      * 审批人岗位
      */
-    private List<CandidatePostParam> candidatePosts;
+    private List<CandidateParam> candidateParams;
 
 
 

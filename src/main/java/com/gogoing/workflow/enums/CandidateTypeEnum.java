@@ -10,18 +10,18 @@ package com.gogoing.workflow.enums;
  * @date 2019/11/27 21:32
  * @since V1.0.0
  */
-public enum ProcessTaskAuditTypeEnum {
+public enum CandidateTypeEnum {
 
-    COUNTERSIGN("1","会签审批"),
-    OR_SIGN("2","或签审批"),
-    NOTIFY("3","知会");
+    USER("1","用户"),
+    GROUP("2","角色组"),
+    NOTIFY("3","抄送");
 
 
     private String type;
 
     private String desc;
 
-    ProcessTaskAuditTypeEnum(String code, String desc) {
+    CandidateTypeEnum(String code, String desc) {
         this.type = code;
         this.desc = desc;
     }
@@ -35,11 +35,11 @@ public enum ProcessTaskAuditTypeEnum {
     }
 
 
-    public static ProcessTaskAuditTypeEnum gain(String code) {
+    public static CandidateTypeEnum gain(String code) {
         if (code == null) {
             return null;
         }
-        for (ProcessTaskAuditTypeEnum type : ProcessTaskAuditTypeEnum.values()) {
+        for (CandidateTypeEnum type : CandidateTypeEnum.values()) {
             if (type.getCode().equals(code)) {
                 return type;
             }

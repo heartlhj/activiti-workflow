@@ -2,10 +2,12 @@ package com.gogoing.workflow.bpmn.builder;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.github.pagehelper.util.StringUtil;
-import com.gogoing.workflow.domain.CandidatePostParam;
+import com.gogoing.workflow.bpmn.model.CustomUserTask;
+import com.gogoing.workflow.domain.CandidateParam;
 import com.gogoing.workflow.domain.ExecutionListenerParam;
 import com.gogoing.workflow.domain.ProcessCreateDefineParam;
 import com.gogoing.workflow.domain.ProcessCreateTaskParam;
+import com.gogoing.workflow.enums.CandidateTypeEnum;
 import com.gogoing.workflow.enums.ProcessTaskAuditTypeEnum;
 import com.gogoing.workflow.exception.ProcessException;
 import lombok.extern.slf4j.Slf4j;
@@ -159,45 +161,36 @@ public class BpmnBuilder {
      * @return
      */
     private UserTask baseTask(ProcessCreateTaskParam node){
-        UserTask taskNode = new UserTask();
+        CustomUserTask taskNode = new CustomUserTask();
         //拼接字母是因为activiti不允许ID有数字开头
         taskNode.setId("t-"+node.getOrderNum());
         taskNode.setName(node.getName());
         taskNode.setDueDate(node.getDueDate());
         taskNode.setPriority(node.getPriority());
-        String category = node.getCategory();
-        taskNode.setCategory(category);
+        taskNode.setCategory(node.getCategory());
+        //审批人集合
+        List<CandidateParam> candidatePosts = node.getCandidateParams();
 
-        //角色集合
-        List<CandidatePostParam> candidatePosts = node.getCandidatePosts();
-        List<String> candidateGroups = new ArrayList<>();
         if(CollectionUtil.isNotEmpty(candidatePosts)){
-            for (CandidatePostParam candidatePost : candidatePosts) {
-                String candidate = null;
-                if(StringUtil.isNotEmpty(candidatePost.getPostType())){
-                    candidate = candidatePost.getPostType() + ":" + candidatePost.getPostId();
-                }else {
-                    candidate = candidatePost.getPostId();
-                }
-                candidateGroups.add(candidate);
+            //用户集合
+            List<String> candidateUsers = candidatePosts.stream().filter(item->item.getType().equals(CandidateTypeEnum.USER.getCode())).map(CandidateParam::getId).collect(Collectors.toList());
+            List<String> candidateGroup = candidatePosts.stream().filter(item->item.getType().equals(CandidateTypeEnum.GROUP.getCode())).map(CandidateParam::getId).collect(Collectors.toList());
+            List<String> candidateNotify = candidatePosts.stream().filter(item->item.getType().equals(CandidateTypeEnum.NOTIFY.getCode())).map(CandidateParam::getId).collect(Collectors.toList());
+            if(CollectionUtil.isNotEmpty(candidateUsers)){
+                taskNode.setCandidateUsers(candidateUsers);
             }
-
+            if(CollectionUtil.isNotEmpty(candidateGroup)){
+                taskNode.setCandidateGroups(candidateGroup);
+            }
+            if(CollectionUtil.isNotEmpty(candidateNotify)){
+                taskNode.setCandidateNotifyUsers(candidateNotify);
+            }
         }
-        taskNode.setCandidateGroups(candidateGroups);
 
-        //用户集合
-        List<String> candidateUser = new ArrayList<>();
         String assignees = node.getAssignee();
         if(StringUtil.isNotEmpty(assignees)){
-            String[] split = assignees.split(",");
-            if(split != null && split.length > 0){
-                for (String assignee : split) {
-
-                    candidateUser.add(assignee);
-                }
-            }
+            taskNode.setAssignee(assignees);
         }
-        taskNode.setCandidateUsers(candidateUser);
         return taskNode;
     }
 
@@ -307,8 +300,5 @@ public class BpmnBuilder {
             }
         }
     }
-
-
-
 
 }

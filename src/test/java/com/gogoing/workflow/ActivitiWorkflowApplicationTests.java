@@ -7,7 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 class ActivitiWorkflowApplicationTests {
 
 	@Test
-	void contextLoads() {
+	public void contextLoads() {
+
 	}
 
 }
