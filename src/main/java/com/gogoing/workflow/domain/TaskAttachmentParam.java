@@ -3,17 +3,15 @@ package com.gogoing.workflow.domain;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
-import java.io.Serializable;
-
 /**
  * 任务附件信息
  *
- * @author huangzh
+ * @author lhj
  * @since 2019/12/27 10:16
  */
 @Data
 @ApiModel("任务附件信息")
-public class TaskAttachmentParam implements Serializable {
+public class TaskAttachmentParam extends AbstractParam {
     /**
      * 附件名称
      */

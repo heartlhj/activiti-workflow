@@ -2,15 +2,12 @@ package com.gogoing.workflow.domain;
 
 
 import javax.validation.constraints.Min;
-import java.io.Serializable;
 
 /**
  * 分页类
  * @author lhj
  */
-public class WorkflowPage extends AbstractParam implements Serializable {
-
-    private static final long serialVersionUID = 6067858305735262573L;
+public class WorkflowPage extends AbstractParam {
 
     /**
      * 页码,传-1代表不分页查询

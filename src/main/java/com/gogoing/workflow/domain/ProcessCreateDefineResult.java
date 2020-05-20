@@ -2,14 +2,12 @@ package com.gogoing.workflow.domain;
 
 import lombok.Data;
 
-import java.io.Serializable;
-
 /**
  * 新增流程定义操作的返回结果
- * @author yangxi
+ * @author lhj
  */
 @Data
-public class ProcessCreateDefineResult implements Serializable {
+public class ProcessCreateDefineResult extends AbstractParam {
 
     private String deployId;
 

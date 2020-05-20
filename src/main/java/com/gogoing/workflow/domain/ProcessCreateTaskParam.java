@@ -11,7 +11,7 @@ import java.util.List;
  * @since V1.0.0
  */
 @Data
-public class ProcessCreateTaskParam {
+public class ProcessCreateTaskParam extends AbstractParam {
 
     private String id;
     /**

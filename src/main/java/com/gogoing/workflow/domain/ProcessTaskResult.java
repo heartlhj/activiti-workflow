@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 流程任务列表信息
@@ -12,16 +12,16 @@ import java.io.Serializable;
  */
 @Data
 @ApiModel(value = "流程任务列表信息")
-public class ProcessTaskResult implements Serializable {
-
-
-    private static final long serialVersionUID = 6055668698236186049L;
+public class ProcessTaskResult extends AbstractParam {
 
     @ApiModelProperty(value = "流程任务ID")
     private String taskId;
 
     @ApiModelProperty(value = "流程任务名称")
     private String taskDefineName;
+
+    @ApiModelProperty(value = "流程任务Key")
+    private String taskDefineKey;
 
     @ApiModelProperty(value = "流程定义KEY")
     private String processDefinitionKey;
@@ -42,9 +42,19 @@ public class ProcessTaskResult implements Serializable {
     private String processInstanceId;
 
     /**
-     * 该变量方便驳回
+     * 审批批注
      */
-    @ApiModelProperty(value = "任务定义ID", example = "sid-xx-ddd")
-    private String taskDefId;
+    @ApiModelProperty(value = "审批批注")
+    private String comment;
+    /**
+     * 创建时间
+     */
+    @ApiModelProperty(value = "创建时间")
+    private Date startTime;
+    /**
+     * 结束时间
+     */
+    @ApiModelProperty(value = "结束时间")
+    private Date endTime;
 
 }

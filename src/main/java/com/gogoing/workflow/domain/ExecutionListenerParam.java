@@ -9,8 +9,7 @@ import org.activiti.bpmn.model.ImplementationType;
  * @date 2020/3/16 10:03
  */
 @Data
-public class ExecutionListenerParam {
-
+public class ExecutionListenerParam extends AbstractParam {
     /**
      * {@link ExecutionListenerEventEnum.EVENT_NAME_START} 节点开始创建
      * {@link ExecutionListenerEventEnum.EVENT_NAME_TASK}  监听连线，当连线到达节点

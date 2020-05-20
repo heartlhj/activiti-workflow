@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.GraphicInfo;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
-import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.impl.persistence.entity.ModelEntityImpl;
 import org.activiti.engine.repository.Deployment;
@@ -46,9 +45,6 @@ public class ProcessDefineServiceImpl implements ProcessDefineService {
 
     @Resource
     private RepositoryService repositoryService;
-
-    @Resource
-    private HistoryService historyService;
 
     @Resource
     private ObjectMapper objectMapper;

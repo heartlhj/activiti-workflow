@@ -1,9 +1,8 @@
 package com.gogoing.workflow.mapper;
 
 import com.gogoing.workflow.domain.ProcessTaskResult;
+import com.gogoing.workflow.domain.TaskFinishQuery;
 import com.gogoing.workflow.domain.TaskUnFinishQuery;
-import org.activiti.engine.impl.persistence.entity.IdentityLinkEntityImpl;
-import org.activiti.engine.impl.persistence.entity.TaskEntityImpl;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -15,13 +14,6 @@ import java.util.List;
  */
 @Mapper
 public interface CustomActivitiDatabaseMapper {
-
-    /**
-     * 新增
-     * @param identityInfoEntity
-     * @return
-     */
-    int insertIdentityInfoByNotify(IdentityLinkEntityImpl identityInfoEntity);
 
     /**
      *  查询待审批任务
@@ -36,4 +28,18 @@ public interface CustomActivitiDatabaseMapper {
      * @return
      */
     Long selectUnFinishTaskCount(TaskUnFinishQuery taskUnFinishQuery);
+
+    /**
+     *  查询待审批任务
+     * @param taskFinishQuery 查询条件
+     * @return
+     */
+    List<ProcessTaskResult> selectFinishTask(TaskFinishQuery taskFinishQuery);
+
+    /**
+     *  查询待审批任务数量
+     * @param taskFinishQuery 查询条件
+     * @return
+     */
+    Long selectFinishTaskCount(TaskFinishQuery taskFinishQuery);
 }

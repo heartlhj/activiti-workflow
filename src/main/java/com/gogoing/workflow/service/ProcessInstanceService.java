@@ -1,7 +1,6 @@
 package com.gogoing.workflow.service;
 
-import com.gogoing.workflow.domain.ProcessStartParam;
-import com.gogoing.workflow.domain.ProcessStartResult;
+import com.gogoing.workflow.domain.*;
 
 
 /**
@@ -16,5 +15,26 @@ public interface ProcessInstanceService {
      * @return 流程启动结果
      */
     ProcessStartResult startProcInstanceByKey(ProcessStartParam startProcessParam);
+
+    /**
+     * 查询流程信息
+     * @param processInstanceId
+     * @return
+     */
+    ProcessInstanceInfoResult getInstanceInfo(String processInstanceId);
+
+    /**
+     * 校验流程撤回
+     * @param param
+     * @return
+     */
+    Boolean processReturn(ProcessReturnParam param);
+
+    /**
+     * 撤销流程实例（流程实例删除、取消申请）
+     * @param deleteProcInstanceParam 撤销流程实例操作请求入参
+     * @return
+     */
+    Boolean procInstanceDelete(ProcInstanceDeleteParam deleteProcInstanceParam);
 
 }

@@ -3,11 +3,9 @@ package com.gogoing.workflow.bpmn.behavior;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.gogoing.workflow.bpmn.model.CustomUserTask;
-import com.gogoing.workflow.mapper.CustomActivitiDatabaseMapper;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.ActivitiIllegalArgumentException;
 import org.activiti.engine.DynamicBpmnConstants;
-import org.activiti.engine.ManagementService;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.Expression;
 import org.activiti.engine.delegate.TaskListener;
@@ -18,11 +16,12 @@ import org.activiti.engine.impl.bpmn.helper.SkipExpressionUtil;
 import org.activiti.engine.impl.calendar.BusinessCalendar;
 import org.activiti.engine.impl.calendar.DueDateBusinessCalendar;
 import org.activiti.engine.impl.cfg.ProcessEngineConfigurationImpl;
-import org.activiti.engine.impl.cmd.AbstractCustomSqlExecution;
 import org.activiti.engine.impl.context.Context;
 import org.activiti.engine.impl.el.ExpressionManager;
 import org.activiti.engine.impl.interceptor.CommandContext;
-import org.activiti.engine.impl.persistence.entity.*;
+import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
+import org.activiti.engine.impl.persistence.entity.TaskEntity;
+import org.activiti.engine.impl.persistence.entity.TaskEntityManager;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -274,17 +273,22 @@ public class CustomUserTaskActivityBehavior extends UserTaskActivityBehavior {
         Expression userIdExpr = expressionManager.createExpression(notify);
         Object value = userIdExpr.getValue(execution);
         if (value instanceof String) {
-          List<String> candidates = extractCandidates((String) value);
-          task.addCandidateUsers(candidates);
+          List<String> userIds = extractCandidates((String) value);
+          for (String userId : userIds) {
+            Context.getCommandContext().getIdentityLinkEntityManager().addUserIdentityLink(task, userId, NOTIFY);
+          }
         } else if (value instanceof Collection) {
-          task.addCandidateUsers((Collection) value);
-        } else {
+          Iterator userIdSet = ((Collection) value).iterator();
+          while (userIdSet.hasNext()) {
+            Context.getCommandContext().getIdentityLinkEntityManager().addUserIdentityLink(task, (String)userIdSet.next(), NOTIFY);
+          }
           throw new ActivitiException("Expression did not resolve to a string or collection of strings");
         }
       }
     }
 
     if (userTask.getCustomUserIdentityLinks() != null && !userTask.getCustomUserIdentityLinks().isEmpty()) {
+
       for (String customUserIdentityLinkType : userTask.getCustomUserIdentityLinks().keySet()) {
         for (String userIdentityLink : userTask.getCustomUserIdentityLinks().get(customUserIdentityLinkType)) {
           Expression idExpression = expressionManager.createExpression(userIdentityLink);
@@ -292,12 +296,12 @@ public class CustomUserTaskActivityBehavior extends UserTaskActivityBehavior {
           if (value instanceof String) {
             List<String> userIds = extractCandidates((String) value);
             for (String userId : userIds) {
-              addIdentityLink(task,userId);
+              task.addUserIdentityLink(userId, customUserIdentityLinkType);
             }
           } else if (value instanceof Collection) {
             Iterator userIdSet = ((Collection) value).iterator();
             while (userIdSet.hasNext()) {
-              addIdentityLink(task,(String)userIdSet.next());
+              task.addUserIdentityLink((String) userIdSet.next(), customUserIdentityLinkType);
             }
           } else {
             throw new ActivitiException("Expression did not resolve to a string or collection of strings");
@@ -307,6 +311,7 @@ public class CustomUserTaskActivityBehavior extends UserTaskActivityBehavior {
       }
 
     }
+
 
     if (userTask.getCustomGroupIdentityLinks() != null && !userTask.getCustomGroupIdentityLinks().isEmpty()) {
 
@@ -337,19 +342,5 @@ public class CustomUserTaskActivityBehavior extends UserTaskActivityBehavior {
   }
   public static final String NOTIFY = "notify";
 
-  public void addIdentityLink(TaskEntity taskEntity, String userId) {
-    IdentityLinkEntityImpl identityLinkEntity = new IdentityLinkEntityImpl();
-    identityLinkEntity.setTask(taskEntity);
-    identityLinkEntity.setUserId(userId);
-    identityLinkEntity.setType(NOTIFY);
-
-    ManagementService managementService = Context.getProcessEngineConfiguration().getManagementService();
-    managementService.executeCustomSql(new AbstractCustomSqlExecution<CustomActivitiDatabaseMapper, Integer>(CustomActivitiDatabaseMapper.class){
-      @Override
-      public Integer execute(CustomActivitiDatabaseMapper customActivitiDatabaseMapper) {
-         return customActivitiDatabaseMapper.insertIdentityInfoByNotify(identityLinkEntity);
-      }
-    });
-  }
 
 }

@@ -9,12 +9,12 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 用户待审批任务列表查询条件
+ * 用户已审批任务列表查询条件
  * @author lhj
  */
 @Data
-@ApiModel(value = "用户待审批任务列表查询条件")
-public class TaskUnFinishQuery extends WorkflowPage {
+@ApiModel(value = "用户已审批任务列表查询条件")
+public class TaskFinishQuery extends WorkflowPage {
 
     /**
      * 流程发起人

@@ -10,7 +10,7 @@ import java.util.List;
  * @date 2020/3/13 14:44
  */
 @Data
-public class ProcessCreateDefineParam {
+public class ProcessCreateDefineParam extends AbstractParam {
     /**
      * 流程唯一标识
      */
