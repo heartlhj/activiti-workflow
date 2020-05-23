@@ -32,7 +32,7 @@ public class ProcessStartParam extends AbstractParam {
     private String userId;
 
     /**
-     * 业务key
+     * 业务key,跟业务单据关联
      */
     @ApiModelProperty(value = "业务key")
     private String businessKey;

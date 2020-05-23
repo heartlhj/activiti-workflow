@@ -47,9 +47,11 @@
                 RES.ASSIGNEE_ IS NULL
                 AND I.TYPE_ = 'candidate'
                 AND ( I.USER_ID_ = #{userId} ))
-                OR (
-                 I.TYPE_ = 'notify'
-                AND ( I.USER_ID_ = #{userId} ))
+                <if test="isNotify">
+                    OR (
+                    I.TYPE_ = 'notify'
+                    AND ( I.USER_ID_ = #{userId} ))
+                </if>
             </if>
         </trim>
     </select>
@@ -93,9 +95,11 @@
                 RES.ASSIGNEE_ IS NULL
                 AND I.TYPE_ = 'candidate'
                 AND ( I.USER_ID_ = #{userId} ))
-                OR (
-                 I.TYPE_ = 'notify'
-                AND ( I.USER_ID_ = #{userId} ))
+                <if test="isNotify">
+                    OR (
+                     I.TYPE_ = 'notify'
+                    AND ( I.USER_ID_ = #{userId} ))
+                </if>
             </if>
         </trim>
     </select>
@@ -144,9 +148,11 @@
                 RES.ASSIGNEE_ IS NULL
                 AND I.TYPE_ = 'candidate'
                 AND ( I.USER_ID_ = #{userId} ))
-                OR (
-                 I.TYPE_ = 'notify'
-                AND ( I.USER_ID_ = #{userId} ))
+                <if test="isNotify">
+                    OR (
+                    I.TYPE_ = 'notify'
+                    AND ( I.USER_ID_ = #{userId} ))
+                </if>
             </if>
         </trim>
     </select>
@@ -191,9 +197,11 @@
                 RES.ASSIGNEE_ IS NULL
                 AND I.TYPE_ = 'candidate'
                 AND ( I.USER_ID_ = #{userId} ))
-                OR (
-                I.TYPE_ = 'notify'
-                AND ( I.USER_ID_ = #{userId} ))
+                <if test="isNotify">
+                    OR (
+                    I.TYPE_ = 'notify'
+                    AND ( I.USER_ID_ = #{userId} ))
+                </if>
             </if>
         </trim>
     </select>

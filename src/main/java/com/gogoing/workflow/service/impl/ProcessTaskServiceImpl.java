@@ -88,7 +88,6 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
 
         Task task = taskService.createTaskQuery()
                 .taskId(param.getTaskId())
-                .taskCandidateOrAssigned(param.getUserId())
                 .singleResult();
         if (task == null) {
             throw new ProcessException("没有权限执行该任务！");

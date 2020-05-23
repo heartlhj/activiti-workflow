@@ -47,6 +47,12 @@ public class TaskUnFinishQuery extends WorkflowPage {
     private Date startTime;
 
     /**
+     * 是否包含抄送
+     */
+    @ApiModelProperty(value = "是否包含抄送")
+    private Boolean isNotify;
+
+    /**
      * 结束时间
      */
     @ApiModelProperty(value = "结束时间")

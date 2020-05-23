@@ -46,7 +46,6 @@ public class CustomUserTaskJsonConverter extends UserTaskJsonConverter implement
 
         task.setDueDate(getPropertyValueAsString(PROPERTY_USERTASK_DUEDATE, elementNode));
         task.setCategory(getPropertyValueAsString(PROPERTY_USERTASK_CATEGORY, elementNode));
-        task.setCategory(getPropertyValueAsString(CANDIDATE_NOTIFY_USERS, elementNode));
 
         JsonNode assignmentNode = getProperty(PROPERTY_USERTASK_ASSIGNMENT, elementNode);
         if (assignmentNode != null) {
@@ -63,6 +62,7 @@ public class CustomUserTaskJsonConverter extends UserTaskJsonConverter implement
 
                     task.setCandidateUsers(getValueAsList(PROPERTY_USERTASK_CANDIDATE_USERS, assignmentDefNode));
                     task.setCandidateGroups(getValueAsList(PROPERTY_USERTASK_CANDIDATE_GROUPS, assignmentDefNode));
+                    task.setCandidateNotifyUsers(getValueAsList(CANDIDATE_NOTIFY_USERS, assignmentDefNode));
 
                     if (StringUtils.isNotEmpty(task.getAssignee()) && "$INITIATOR".equalsIgnoreCase(task.getAssignee()) == false) {
 

@@ -51,4 +51,10 @@ public class TaskFinishQuery extends WorkflowPage {
      */
     @ApiModelProperty(value = "结束时间")
     private Date endTime;
+
+    /**
+     * 是否包含抄送
+     */
+    @ApiModelProperty(value = "是否包含抄送")
+    private Boolean isNotify;
 }

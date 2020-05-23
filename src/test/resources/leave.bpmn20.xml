@@ -3,7 +3,7 @@
   <process id="leave" name="请假流程" isExecutable="true">
     <documentation>请假流程</documentation>
     <startEvent id="startEvent1"></startEvent>
-    <userTask id="sid-254390AD-30E7-4390-8B97-E2A395C4A15C" name="主管审批" activiti:assignee="lisi" activiti:formKey="adjustRequest.form">
+    <userTask id="sid-254390AD-30E7-4390-8B97-E2A395C4A15C" name="主管审批" activiti:assignee="lisi" activiti:candidateNotifyUsers="wangwu,zhangsan">
       <extensionElements>
         <activiti:formProperty id="id" name="测试" type="string"></activiti:formProperty>
         <activiti:formProperty id="name" name="name" type="string"></activiti:formProperty>

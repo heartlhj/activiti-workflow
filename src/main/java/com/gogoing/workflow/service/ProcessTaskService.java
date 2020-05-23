@@ -5,7 +5,7 @@ import com.gogoing.workflow.domain.*;
 
 /**
  * 流程任务管理Service组件
- * @author yangxi
+ * @author lhj
  */
 public interface ProcessTaskService {
 

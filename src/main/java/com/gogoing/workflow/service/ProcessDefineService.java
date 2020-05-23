@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * 流程定义管理Service组件
- * @author yangxi
+ * @author lhj
  */
 public interface ProcessDefineService {
 

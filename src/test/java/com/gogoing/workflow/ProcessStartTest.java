@@ -1,15 +1,16 @@
 package com.gogoing.workflow;
 
+import com.gogoing.workflow.domain.ProcessStartParam;
+import com.gogoing.workflow.domain.ProcessStartResult;
+import com.gogoing.workflow.service.ProcessInstanceService;
 import lombok.extern.slf4j.Slf4j;
-import org.activiti.engine.IdentityService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.runtime.ProcessInstance;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.annotation.Resource;
 import java.util.UUID;
 
 /**
@@ -25,22 +26,24 @@ public class ProcessStartTest {
 
     private static String KEY = "test";
 
-    @Resource
-    private RuntimeService runtimeService;
+    private ProcessStartParam startProcessParam;
 
-    @Resource
-    private IdentityService identityService;
+    @Autowired
+    private ProcessInstanceService processInstanceService;
 
     @Test
     public void start(){
 
-        //设置流程发起人
-        identityService.setAuthenticatedUserId("demo");
         // 启动流程
-        ProcessInstance processInstance = runtimeService.createProcessInstanceBuilder()
-                .processDefinitionKey(KEY)
-                .businessKey(UUID.randomUUID().toString())
-                .start();
-        log.info("流程发起成功，流程实例ID:" + processInstance.getId());
+        ProcessStartResult processInstance = processInstanceService.startProcInstanceByKey(startProcessParam);
+        log.info("流程发起成功，流程实例ID:" + processInstance.getProcessInstanceId());
+    }
+
+    @Before
+    public void createProcessStartParam() {
+        startProcessParam = new ProcessStartParam();
+        startProcessParam.setProcessDefineKey(KEY);
+        startProcessParam.setUserId("lisi");
+        startProcessParam.setBusinessKey(UUID.randomUUID().toString());
     }
 }

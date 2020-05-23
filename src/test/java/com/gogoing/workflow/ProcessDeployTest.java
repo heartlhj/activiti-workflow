@@ -7,6 +7,7 @@ import org.activiti.bpmn.model.*;
 import org.activiti.bpmn.model.Process;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.Deployment;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,13 +34,14 @@ public class ProcessDeployTest {
 	@Resource
 	private RepositoryService repositoryService;
 
+	//流程模型对象
+	private BpmnModel model;
+
 	/**
 	 * 通过模型部署
 	 */
 	@Test
 	public void deployByObject() {
-		//创建模型
-		BpmnModel model = createProcess();
 		//部署流程
 		Deployment deploy = repositoryService.createDeployment().
 				addBpmnModel("test.bpmn", model).key("test").name("测试").deploy();
@@ -60,9 +62,9 @@ public class ProcessDeployTest {
 	 * 创建模型
 	 * @return
 	 */
-	private BpmnModel createProcess() {
-		//流程模型对象
-		BpmnModel model = new BpmnModel();
+	@Before
+	public void createProcess() {
+		model = new BpmnModel();
 		//流程对象
 		Process process = new Process();
 		//流程定义KEY,流程发起时可根据key启动一条流程
@@ -80,7 +82,6 @@ public class ProcessDeployTest {
 		model.addProcess(process);
 		//自动生成坐标
 		new BpmnAutoLayout(model).execute();
-		return model;
 	}
 
 	/**
