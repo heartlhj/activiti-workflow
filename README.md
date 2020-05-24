@@ -1,6 +1,8 @@
 # 流程引擎
 
-------
+项目还在逐步完善中，感兴趣的伙伴欢迎来纠错。
+
+**项目介绍**
 
 在 **activiti 6.0.0** 提供接口的基础上进行封装和扩展，支持通用审批流。项目可直接投入使用。 
 
@@ -11,8 +13,9 @@
 > * 流程驳回
 > * 流程撤回
 > * 流程终止
+> * 列表查询支持分页
 
-扩展支持节点抄送，通过重写**UserTaskActivityBehavior**的handleAssignments将抄送用户存入数据库。
+扩展支持节点抄送，通过重写**UserTaskActivityBehavior**的handleAssignments将抄送用户存入数据库。具体修改代码位于[com.gogoing.workflow.bpmn][1]。
 
 ```java
 protected void handleAssignments(TaskEntityManager taskEntityManager, String assignee, String owner, List<String> candidateUsers,
@@ -42,6 +45,31 @@ protected void handleAssignments(TaskEntityManager taskEntityManager, String ass
   }
 ```
 
+查询待审批任务同时返回的抄送的任务，参考ProcessTaskService#queryUnFinishTask
 
-通过swagger进行接口管理，项目启动后，通过访问：http://ip:port/swagger-ui.html
 
+封装列表查询工具类[PageUtil][2]，可直接使用。
+
+通过swagger进行接口管理，项目启动后，通过访问：http://ip:8888/swagger-ui.html
+
+**配置文件说明**
+
+```java
+
+#用到了liquibse来初始化数据库
+spring.liquibase.enabled = false 
+#true数据库没有表时会自动建表
+spring.activiti.database-schema-update = true
+#是否校验流程文件，默认校验resources下的processes文件夹里的流程文件
+spring.activiti.check-process-definitions = false
+#自定义流程文件位置
+spring.activiti.process-definition-location-prefix = /processes/
+#打印流程引擎数据库日志
+logging.level.org.activiti.engine.impl.persistence.entity = trace
+#是否开发定时任务
+spring.activiti.async-executor-activate = true
+```
+
+
+  [1]: https://github.com/heartlhj/activiti-workflow/tree/master/src/main/java/com/gogoing/workflow/bpmn
+  [2]: https://github.com/heartlhj/activiti-workflow/blob/master/src/main/java/com/gogoing/workflow/utils/PageUtil.java
