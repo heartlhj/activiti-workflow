@@ -88,7 +88,7 @@ public class CustomUserTaskXMLConverter extends UserTaskXMLConverter {
     writeQualifiedAttribute(ATTRIBUTE_TASK_USER_CANDIDATEUSERS, convertToDelimitedString(userTask.getCandidateUsers()), xtw);
     writeQualifiedAttribute(ATTRIBUTE_TASK_USER_CANDIDATEGROUPS, convertToDelimitedString(userTask.getCandidateGroups()), xtw);
 
-    writeQualifiedAttribute(ATTRIBUTE_TASK_USER_CANDIDATE_NOTIFY_USERS, convertToDelimitedString(userTask.getCandidateNotifyUsers()), xtw);
+    writeDefaultAttribute(ATTRIBUTE_TASK_USER_CANDIDATE_NOTIFY_USERS, convertToDelimitedString(userTask.getCandidateNotifyUsers()), xtw);
 
     writeQualifiedAttribute(ATTRIBUTE_TASK_USER_DUEDATE, userTask.getDueDate(), xtw);
     writeQualifiedAttribute(ATTRIBUTE_TASK_USER_BUSINESS_CALENDAR_NAME, userTask.getBusinessCalendarName(), xtw);

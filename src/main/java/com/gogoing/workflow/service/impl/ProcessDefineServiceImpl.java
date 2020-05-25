@@ -14,9 +14,13 @@ import com.gogoing.workflow.domain.ProcessCreateDefineResult;
 import com.gogoing.workflow.domain.ProcessDefineResult;
 import com.gogoing.workflow.exception.ProcessException;
 import com.gogoing.workflow.service.ProcessDefineService;
+import com.gogoing.workflow.utils.XmlUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.activiti.bpmn.BpmnAutoLayout;
+import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.GraphicInfo;
+import org.activiti.bpmn.model.Process;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.impl.persistence.entity.ModelEntityImpl;
@@ -27,10 +31,14 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,6 +61,11 @@ public class ProcessDefineServiceImpl implements ProcessDefineService {
      * bpmn与json的转换器
      */
     private BpmnJsonConverter bpmnJsonConverter = new BpmnJsonConverter();
+
+    /**
+     * bpmn与xml的转换器
+     */
+    private BpmnXMLConverter bpmnXmlConverter = new BpmnXMLConverter();
 
 
     /**
@@ -137,6 +150,78 @@ public class ProcessDefineServiceImpl implements ProcessDefineService {
         result.setProcessKey(deploy.getKey());
         result.setCode(true);
         return result;
+    }
+
+    /**
+     * 根据bpmn文件导入增加模型
+     *
+     * @param file 上传的文件
+     * @return 增加的模型信息
+     */
+    @Override
+    public Boolean importModel(MultipartFile file) {
+        try {
+            // 将bpmn格式的流程文件转BpmnModel类
+            XMLInputFactory xif = XmlUtil.createSafeXmlInputFactory();
+            InputStreamReader xmlIn = new InputStreamReader(file.getInputStream(), ProcessConstants.COMMON_CHARACTER_ENCODING_UTF_8);
+            XMLStreamReader xtr = xif.createXMLStreamReader(xmlIn);
+            BpmnModel bpmnModel = bpmnXmlConverter.convertToBpmnModel(xtr);
+
+            Process mainProcess = bpmnModel.getMainProcess();
+            if (null == mainProcess) {
+                throw new ProcessException("No process found in definition " + file.getOriginalFilename());
+            }
+
+            // 将文件进行自动布局
+            if (bpmnModel.getLocationMap().size() == 0) {
+                BpmnAutoLayout bpmnLayout = new BpmnAutoLayout(bpmnModel);
+                bpmnLayout.execute();
+            }
+
+            String key = mainProcess.getId();
+            String name = mainProcess.getName();
+            String description = mainProcess.getDocumentation();
+            // 将bpmnmodel转成json
+            ObjectNode modelNode = bpmnJsonConverter.convertToJson(bpmnModel);
+
+            // 将bpmnModel对象转成字节码部署
+            byte[] modelFileBytes = bpmnXmlConverter.convertToXML(bpmnModel);
+            //设置部署信息，执行部署
+            Deployment deployment = repositoryService
+                    .createDeployment()
+                    .addBytes(key + ProcessConstants.RESOURCE_NAME_SUFFIX, modelFileBytes)
+                    .key(key)
+                    .name(name)
+                    .deploy();
+
+            // 构造model的MateInfo数据
+            ObjectNode modelObjectNode = objectMapper.createObjectNode();
+            modelObjectNode.put(ProcessConstants.MODEL_NAME, name);
+            modelObjectNode.put(ProcessConstants.MODEL_REVISION, 1);
+            modelObjectNode.put(ProcessConstants.MODEL_DESCRIPTION, description);
+            Model model = new ModelEntityImpl();
+            model.setMetaInfo(modelObjectNode.toString());
+            model.setName(name);
+            model.setKey(key);
+            model.setDeploymentId(deployment.getId());
+            // 新增模型数据并增加模型的xml和图片
+            updateModelAndSource(model, bpmnModel, modelNode);
+            return true;
+        } catch (Exception e) {
+            log.error("文件解释出错，请检查文件是否为bpmn2.0标准格式", e);
+            throw new ProcessException("文件解释出错，请检查文件是否为bpmn2.0标准格式");
+        }
+    }
+
+    /**
+     * 获取模型数据
+     * @param processDefinitionId
+     * @return
+     */
+    @Override
+    public BpmnModel export(String processDefinitionId) {
+            BpmnModel bpmnModel = repositoryService.getBpmnModel(processDefinitionId);
+            return bpmnModel;
     }
 
     /**

@@ -118,6 +118,12 @@ public class ProcessDeployTest {
 		taskNode.setAssignee("lisi");
 
 		//设置抄送人
+		List<String> candidateUsers = new ArrayList();
+		candidateUsers.add("liusi");
+		candidateUsers.add("li");
+		taskNode.setCandidateUsers(candidateUsers);
+
+		//设置抄送人
 		List<String> candidateNotifyUsers = new ArrayList();
 		candidateNotifyUsers.add("wangwu");
 		candidateNotifyUsers.add("zhangsan");
