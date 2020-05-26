@@ -15,7 +15,14 @@
 > * 流程终止
 > * 列表查询支持分页
 
-扩展支持节点抄送，通过重写**UserTaskActivityBehavior**的handleAssignments将抄送用户存入数据库。具体修改代码位于[com.gogoing.workflow.bpmn][1]。
+自定义BPMN标签：参考博客[activiti自定义标签][1]
+流程驳回：参考博客[activiti流程驳回][2]
+
+驳回过程
+![Image](https://github.com/heartlhj/activiti-workflow/blob/master/doc/image/back.png)
+
+
+扩展支持节点抄送，通过重写**UserTaskActivityBehavior**的handleAssignments将抄送用户存入数据库。具体修改代码位于[com.gogoing.workflow.bpmn][3]。
 
 ```java
 protected void handleAssignments(TaskEntityManager taskEntityManager, String assignee, String owner, List<String> candidateUsers,
@@ -48,7 +55,7 @@ protected void handleAssignments(TaskEntityManager taskEntityManager, String ass
 查询待审批任务同时返回的抄送的任务，参考ProcessTaskService#queryUnFinishTask
 
 
-封装列表查询工具类[PageUtil][2]，可直接使用。
+封装列表查询工具类[PageUtil][4]，可直接使用。
 
 通过swagger进行接口管理，项目启动后，通过访问：http://ip:8888/swagger-ui.html
 
@@ -71,5 +78,7 @@ spring.activiti.async-executor-activate = true
 ```
 
 
-  [1]: https://github.com/heartlhj/activiti-workflow/tree/master/src/main/java/com/gogoing/workflow/bpmn
-  [2]: https://github.com/heartlhj/activiti-workflow/blob/master/src/main/java/com/gogoing/workflow/utils/PageUtil.java
+  [1]: https://blog.csdn.net/qq_34758074/article/details/106356127
+  [2]: https://blog.csdn.net/qq_34758074/article/details/106365223
+  [3]: https://github.com/heartlhj/activiti-workflow/tree/master/src/main/java/com/gogoing/workflow/bpmn
+  [4]: https://github.com/heartlhj/activiti-workflow/blob/master/src/main/java/com/gogoing/workflow/utils/PageUtil.java
