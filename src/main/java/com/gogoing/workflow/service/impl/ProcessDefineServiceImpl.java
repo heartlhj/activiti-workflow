@@ -8,6 +8,7 @@ import com.github.pagehelper.util.StringUtil;
 import com.gogoing.workflow.bpmn.builder.BpmnBuilder;
 import com.gogoing.workflow.bpmn.builder.ImageBpmnModelUtils;
 import com.gogoing.workflow.bpmn.builder.ImageGenerator;
+import com.gogoing.workflow.bpmn.converter.CustomBpmnJsonConverter;
 import com.gogoing.workflow.constant.ProcessConstants;
 import com.gogoing.workflow.domain.ProcessCreateDefineParam;
 import com.gogoing.workflow.domain.ProcessCreateDefineResult;
@@ -60,7 +61,7 @@ public class ProcessDefineServiceImpl implements ProcessDefineService {
     /**
      * bpmn与json的转换器
      */
-    private BpmnJsonConverter bpmnJsonConverter = new BpmnJsonConverter();
+    private BpmnJsonConverter bpmnJsonConverter = new CustomBpmnJsonConverter();
 
     /**
      * bpmn与xml的转换器

@@ -44,7 +44,7 @@ public class ProcessDeployTest {
 	public void deployByObject() {
 		//部署流程
 		Deployment deploy = repositoryService.createDeployment().
-				addBpmnModel("test.bpmn", model).key("test").name("测试").deploy();
+				addBpmnModel("test20120.bpmn", model).key("test20120").name("测试").deploy();
 		log.info("通过模型部署成功，部署ID为："+deploy.getId());
 
 	}

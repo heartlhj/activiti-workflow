@@ -18,6 +18,13 @@ import java.util.*;
  */
 public class CustomUserTaskJsonConverter extends UserTaskJsonConverter implements CustomStencilConstants {
 
+    public static void fillTypes(Map<String, Class<? extends BaseBpmnJsonConverter>> convertersToBpmnMap, Map<Class<? extends BaseElement>, Class<? extends BaseBpmnJsonConverter>> convertersToJsonMap) {
+
+        fillJsonTypes(convertersToBpmnMap);
+        fillBpmnTypes(convertersToJsonMap);
+    }
+
+
     public static void fillJsonTypes(Map<String, Class<? extends BaseBpmnJsonConverter>> convertersToBpmnMap) {
         convertersToBpmnMap.put("UserTask", CustomUserTaskJsonConverter.class);
     }
