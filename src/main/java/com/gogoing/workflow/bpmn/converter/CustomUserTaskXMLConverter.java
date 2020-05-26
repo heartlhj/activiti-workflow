@@ -23,6 +23,9 @@ public class CustomUserTaskXMLConverter extends UserTaskXMLConverter {
   public static final String ATTRIBUTE_TASK_USER_CANDIDATE_NOTIFY_USERS = "candidateNotifyUsers";
 
 
+  /**
+   * 用户节点默认通用属性
+   */
   protected static final List<ExtensionAttribute> defaultUserTaskAttributes = Arrays.asList(
           new ExtensionAttribute(ACTIVITI_EXTENSIONS_NAMESPACE, ATTRIBUTE_FORM_FORMKEY),
           new ExtensionAttribute(ACTIVITI_EXTENSIONS_NAMESPACE, ATTRIBUTE_TASK_USER_DUEDATE),
@@ -34,8 +37,9 @@ public class CustomUserTaskXMLConverter extends UserTaskXMLConverter {
           new ExtensionAttribute(ACTIVITI_EXTENSIONS_NAMESPACE, ATTRIBUTE_TASK_USER_CANDIDATEGROUPS),
           new ExtensionAttribute(ACTIVITI_EXTENSIONS_NAMESPACE, ATTRIBUTE_TASK_USER_CATEGORY),
           new ExtensionAttribute(ACTIVITI_EXTENSIONS_NAMESPACE, ATTRIBUTE_TASK_SERVICE_EXTENSIONID),
-          new ExtensionAttribute(ACTIVITI_EXTENSIONS_NAMESPACE, ATTRIBUTE_TASK_USER_SKIP_EXPRESSION),
-          new ExtensionAttribute(ACTIVITI_EXTENSIONS_NAMESPACE, ATTRIBUTE_TASK_USER_CANDIDATE_NOTIFY_USERS)
+          //设置抄送为默认通用标签
+          new ExtensionAttribute(ACTIVITI_EXTENSIONS_NAMESPACE, ATTRIBUTE_TASK_USER_CANDIDATE_NOTIFY_USERS),
+          new ExtensionAttribute(ACTIVITI_EXTENSIONS_NAMESPACE, ATTRIBUTE_TASK_USER_SKIP_EXPRESSION)
   );
 
 
@@ -107,6 +111,7 @@ public class CustomUserTaskXMLConverter extends UserTaskXMLConverter {
     writeQualifiedAttribute(ATTRIBUTE_TASK_USER_OWNER, userTask.getOwner(), xtw);
     writeQualifiedAttribute(ATTRIBUTE_TASK_USER_CANDIDATEUSERS, convertToDelimitedString(userTask.getCandidateUsers()), xtw);
     writeQualifiedAttribute(ATTRIBUTE_TASK_USER_CANDIDATEGROUPS, convertToDelimitedString(userTask.getCandidateGroups()), xtw);
+    //设置抄送标签属性
     writeQualifiedAttribute(ATTRIBUTE_TASK_USER_CANDIDATE_NOTIFY_USERS, convertToDelimitedString(userTask.getCandidateNotifyUsers()), xtw);
     writeQualifiedAttribute(ATTRIBUTE_TASK_USER_DUEDATE, userTask.getDueDate(), xtw);
     writeQualifiedAttribute(ATTRIBUTE_TASK_USER_BUSINESS_CALENDAR_NAME, userTask.getBusinessCalendarName(), xtw);
