@@ -22,7 +22,7 @@
 
 驳回过程
 
-![](https://img-blog.csdnimg.cn/20200526220007640.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM0NzU4MDc0,size_16,color_FFFFFF,t_70)
+![](https://oscimg.oschina.net/oscnet/up-12202dfbc07857e4b9a33dec256d9b29b74.png)
 
 
 扩展支持节点抄送，通过重写**UserTaskActivityBehavior**的handleAssignments将抄送用户存入数据库。具体修改代码位于[com.gogoing.workflow.bpmn][3]。
