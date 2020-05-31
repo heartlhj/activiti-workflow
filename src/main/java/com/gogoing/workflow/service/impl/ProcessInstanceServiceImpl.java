@@ -2,6 +2,7 @@ package com.gogoing.workflow.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.github.pagehelper.util.StringUtil;
+import com.gogoing.workflow.cmd.CustomTaskCompleteCmd;
 import com.gogoing.workflow.domain.*;
 import com.gogoing.workflow.exception.ProcessException;
 import com.gogoing.workflow.service.ProcessInstanceService;
@@ -11,10 +12,7 @@ import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.FlowElement;
 import org.activiti.bpmn.model.FlowNode;
 import org.activiti.bpmn.model.SequenceFlow;
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.IdentityService;
-import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.RuntimeService;
+import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.cfg.ProcessEngineConfigurationImpl;
@@ -57,6 +55,9 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
 
     @Resource
     private ProcessEngine processEngine;
+
+    @Resource
+    private ManagementService managementService;
 
     /**
      * 启动流程实例（通过流程定义key来启动）
@@ -202,7 +203,7 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
                 processEngine.getTaskService().setVariablesLocal(task.getId(),variables);
                 try {
                     //完成
-                    processEngine.getTaskService().complete(task.getId());
+                    managementService.executeCommand(new CustomTaskCompleteCmd(task.getId(),variables,true));
                     //删除任务
                     /*撤回记录保存，不用删除历史信息*/
                     //historyService.deleteHistoricTaskInstance(task.getId());

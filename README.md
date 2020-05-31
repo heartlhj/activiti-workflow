@@ -22,8 +22,9 @@
 
 驳回过程
 
-![](https://oscimg.oschina.net/oscnet/up-12202dfbc07857e4b9a33dec256d9b29b74.png)
+![](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9vc2NpbWcub3NjaGluYS5uZXQvb3NjbmV0L3VwLTEyMjAyZGZiYzA3ODU3ZTRiOWEzM2RlYzI1NmQ5YjI5Yjc0LnBuZw?x-oss-process=image/format,png)
 
+自定义完成的方法，完成时不执行流程事件，使用于流程驳回，撤销操作，参考[CustomTaskCompleteCmd](https://github.com/heartlhj/activiti-workflow/blob/master/src/main/java/com/gogoing/workflow/cmd/CustomTaskCompleteCmd.java)类。
 
 扩展支持节点抄送，通过重写**UserTaskActivityBehavior**的handleAssignments将抄送用户存入数据库。具体修改代码位于[com.gogoing.workflow.bpmn][3]。
 

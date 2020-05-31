@@ -2,6 +2,7 @@ package com.gogoing.workflow.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.github.pagehelper.util.StringUtil;
+import com.gogoing.workflow.cmd.CustomTaskCompleteCmd;
 import com.gogoing.workflow.domain.*;
 import com.gogoing.workflow.exception.ProcessException;
 import com.gogoing.workflow.mapper.CustomActivitiDatabaseMapper;
@@ -183,10 +184,10 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
                         //设置节点状态
                         taskService.setVariablesLocal(task.getId(), variables);
                         //完成
-                        taskService.complete(task.getId());
+                        managementService.executeCommand(new CustomTaskCompleteCmd(task.getId(),variables,true));
                     }else{
                         //完成
-                        taskService.complete(task.getId());
+                        managementService.executeCommand(new CustomTaskCompleteCmd(task.getId(),variables,true));
                         //删除任务
                         historyService.deleteHistoricTaskInstance(task.getId());
                     }
