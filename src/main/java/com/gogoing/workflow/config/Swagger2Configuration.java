@@ -28,9 +28,9 @@ public class Swagger2Configuration {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("activiti工作流演示工程")
+                .title("activiti工作流")
                 .description("简单优雅的restful风格接口")
-                .termsOfServiceUrl("http://www.deepexi.com/")
+                .termsOfServiceUrl("http://www.gogogoing.cn/")
                 .version("1.0")
                 .build();
     }

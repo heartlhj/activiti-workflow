@@ -21,7 +21,7 @@ public class ExecutionListenerParam extends AbstractParam {
      */
     private String bean;
     /**
-     * {@link ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION } java类的全路径,类需实现 {@link TaskListener}，会执行notify(）方法， {@link bean}为${com.deepexi.workflow.Test}.这种实现类不能注入Spring bean
+     * {@link ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION } java类的全路径,类需实现 {@link TaskListener}，会执行notify(）方法， {@link bean}为${com.gogogoing.workflow.Test}.这种实现类不能注入Spring bean
      * {@link ImplementationType.IMPLEMENTATION_TYPE_EXPRESSION } 执行特定类的特定方法 配置 {@link bean}为${test.test()}
      * {@link ImplementationType.IMPLEMENTATION_TYPE_DELEGATEEXPRESSION } 配置spring的bean 实现 {@link ExecutionListener} {@link bean}为${test}。实现类交由spring管理。
      */
