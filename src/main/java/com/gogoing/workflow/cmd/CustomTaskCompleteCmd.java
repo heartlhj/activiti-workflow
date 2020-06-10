@@ -42,8 +42,8 @@ public class CustomTaskCompleteCmd extends CompleteTaskCmd {
         if (taskEntity.getDelegationState() != null && taskEntity.getDelegationState().equals(DelegationState.PENDING)) {
             throw new ActivitiException("A delegated task cannot be completed, but should be resolved instead.");
         }
-
-        commandContext.getProcessEngineConfiguration().getListenerNotificationHelper().executeTaskListeners(taskEntity, TaskListener.EVENTNAME_COMPLETE);
+        //移除任务完成监听器执行
+        //commandContext.getProcessEngineConfiguration().getListenerNotificationHelper().executeTaskListeners(taskEntity, TaskListener.EVENTNAME_COMPLETE);
         if (Authentication.getAuthenticatedUserId() != null && taskEntity.getProcessInstanceId() != null) {
             ExecutionEntity processInstanceEntity = commandContext.getExecutionEntityManager().findById(taskEntity.getProcessInstanceId());
             commandContext.getIdentityLinkEntityManager().involveUser(processInstanceEntity, Authentication.getAuthenticatedUserId(), IdentityLinkType.PARTICIPANT);
