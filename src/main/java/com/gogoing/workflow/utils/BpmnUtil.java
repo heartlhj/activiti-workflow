@@ -88,8 +88,8 @@ public class BpmnUtil {
      * @param targetFlowElement
      * @return
      */
-    public static Map<String,List<SequenceFlow>> invokeSequenceFlows(BpmnModel bpmnModel , List<org.activiti.engine.task.Task> taskList, FlowElement targetFlowElement) {
-        Map<String,List<SequenceFlow>> flowElements = new HashMap<>();
+    public static Map<String,List<SequenceFlow>> invokeSequenceFlows(BpmnModel bpmnModel , List<Task> taskList, FlowElement targetFlowElement) {
+        Map<String,List<SequenceFlow>> flowElements = new HashMap<>(2);
         //并行网关
         ParallelGateway parallelGateway = new ParallelGateway();
         parallelGateway.setId("parallelGateway" + targetFlowElement.getId());
