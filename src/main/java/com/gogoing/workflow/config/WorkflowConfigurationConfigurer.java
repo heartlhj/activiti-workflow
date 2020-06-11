@@ -1,6 +1,7 @@
 package com.gogoing.workflow.config;
 
 import com.gogoing.workflow.bpmn.converter.CustomUserTaskXMLConverter;
+import com.gogoing.workflow.bpmn.entity.CustomIdentityLinkEntityManagerImpl;
 import com.gogoing.workflow.bpmn.handler.CustomUserTaskParseHandler;
 import com.gogoing.workflow.mapper.CustomActivitiDatabaseMapper;
 import org.activiti.bpmn.converter.BpmnXMLConverter;
@@ -56,6 +57,8 @@ public class WorkflowConfigurationConfigurer implements ProcessEngineConfigurati
         List<BpmnParseHandler> postBpmnParseHandlers = new ArrayList<>();
         postBpmnParseHandlers.add(new CustomUserTaskParseHandler());
         processEngineConfiguration.setPostBpmnParseHandlers(postBpmnParseHandlers);
+        processEngineConfiguration.init();
+        processEngineConfiguration.setIdentityLinkEntityManager(new CustomIdentityLinkEntityManagerImpl(processEngineConfiguration, processEngineConfiguration.getIdentityLinkDataManager()));
 
         BpmnXMLConverter.addConverter(new CustomUserTaskXMLConverter());
     }

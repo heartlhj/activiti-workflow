@@ -206,6 +206,93 @@
         </trim>
     </select>
 
+
+    <select id="selectNotifyTask" resultMap="taskResultMap">
+        SELECT DISTINCT
+        RES.ID_,
+        RES.NAME_,
+        RES.ASSIGNEE_,
+        D.NAME_ AS PROC_NAME_,
+        D.KEY_ AS PROC_KEY_,
+        E.BUSINESS_KEY_
+        FROM
+        ACT_HI_TASKINST RES
+        LEFT JOIN ACT_HI_IDENTITYLINK I ON I.TASK_ID_ = RES.ID_
+        INNER JOIN ACT_RE_PROCDEF D ON RES.PROC_DEF_ID_ = D.ID_
+        INNER JOIN ACT_HI_PROCINST E ON RES.PROC_INST_ID_ = E.ID_
+        <trim prefix="WHERE" prefixOverrides="and|or">
+            <if test="businessKeys != null">
+                <trim prefix=" E.BUSINESS_KEY in (" prefixOverrides="and" suffix =")" suffixOverrides=",">
+                    <foreach collection="businessKeys" item="key" separator=",">
+                        #{key}
+                    </foreach>
+                </trim>
+            </if>
+            <choose>
+                <when test="startTime != null and endTime != null ">
+                    and E.START_TIME_ between #{startTime} and #{endTime}
+                </when>
+                <when test="startTime != null and endTime == null">
+                    and E.START_TIME_ &gt;= #{startTime}
+                </when>
+                <when test="startTime == null and endTime != null">
+                    and E.START_TIME_ &lt;= #{endTime}
+                </when>
+                <otherwise>
+
+                </otherwise>
+            </choose>
+            <if test="startUserId != null and startUserId != '' ">
+                AND I.TYPE_ = 'starter' AND I.USER_ID_ = #{startUserId}
+            </if>
+            <if test="userId != null and userId != '' ">
+                AND I.TYPE_ = 'notify'
+                    AND  I.USER_ID_ = #{userId}
+            </if>
+        </trim>
+    </select>
+
+
+    <select id="selectNotifyTaskCount" resultType="java.lang.Long">
+        SELECT DISTINCT
+        count( DISTINCT RES.ID_)
+        FROM
+        ACT_HI_TASKINST RES
+        LEFT JOIN ACT_HI_IDENTITYLINK I ON I.TASK_ID_ = RES.ID_
+        INNER JOIN ACT_RE_PROCDEF D ON RES.PROC_DEF_ID_ = D.ID_
+        INNER JOIN ACT_HI_PROCINST E ON RES.PROC_INST_ID_ = E.ID_
+        <trim prefix="WHERE" prefixOverrides="and|or">
+            <if test="businessKeys != null">
+                <trim prefix=" E.BUSINESS_KEY in (" prefixOverrides="and" suffix =")" suffixOverrides=",">
+                    <foreach collection="businessKeys" item="key" separator=",">
+                        #{key}
+                    </foreach>
+                </trim>
+            </if>
+            <choose>
+                <when test="startTime != null and endTime != null ">
+                    and RES.START_TIME_ between #{startTime} and #{endTime}
+                </when>
+                <when test="startTime != null and endTime == null">
+                    and RES.START_TIME_ &gt;= #{startTime}
+                </when>
+                <when test="startTime == null and endTime != null">
+                    and RES.START_TIME_ &lt;= #{endTime}
+                </when>
+                <otherwise>
+
+                </otherwise>
+            </choose>
+            <if test="startUserId != null and startUserId != '' ">
+                AND I.TYPE_ = 'starter' AND I.USER_ID_ = #{startUserId}
+            </if>
+            <if test="userId != null and userId != '' ">
+                AND I.TYPE_ = 'notify'
+                    AND I.USER_ID_ = #{userId}
+            </if>
+        </trim>
+    </select>
+
     <resultMap id="taskResultMap" type="com.gogoing.workflow.domain.ProcessTaskResult">
         <id property="taskId" column="ID_" jdbcType="VARCHAR"/>
         <result property="taskDefineName" column="NAME_" jdbcType="VARCHAR"/>

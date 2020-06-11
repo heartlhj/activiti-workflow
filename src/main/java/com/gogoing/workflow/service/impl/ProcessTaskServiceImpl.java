@@ -230,4 +230,27 @@ public class ProcessTaskServiceImpl implements ProcessTaskService {
 
         return pageUtil.buildPage(list,taskFinishQuery,count);
     }
+
+    @Override
+    public PageBean<ProcessTaskResult> queryNotifyTask(TaskQuery taskQuery){
+        PageUtil<ProcessTaskResult, TaskQuery> pageUtil = new PageUtil<>();
+        Long count = managementService.executeCustomSql(new AbstractCustomSqlExecution<CustomActivitiDatabaseMapper, Long>(CustomActivitiDatabaseMapper.class) {
+            @Override
+            public Long execute(CustomActivitiDatabaseMapper customActivitiDatabaseMapper) {
+                return customActivitiDatabaseMapper.selectNotifyTaskCount(taskQuery);
+            }
+        });
+        //没有查询到，就直接返回空
+        if(count <= 0){
+            return pageUtil.buildPage(Collections.emptyList(), taskQuery, 0);
+        }
+        List<ProcessTaskResult> list = managementService.executeCustomSql(new AbstractCustomSqlExecution<CustomActivitiDatabaseMapper, List<ProcessTaskResult>>(CustomActivitiDatabaseMapper.class) {
+            @Override
+            public List<ProcessTaskResult> execute(CustomActivitiDatabaseMapper customActivitiDatabaseMapper) {
+                return customActivitiDatabaseMapper.selectNotifyTask(taskQuery);
+            }
+        });
+
+        return pageUtil.buildPage(list,taskQuery,count);
+    }
 }

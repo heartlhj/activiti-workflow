@@ -3,6 +3,7 @@ package com.gogoing.workflow.bpmn.behavior;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.gogoing.workflow.bpmn.model.CustomUserTask;
+import com.gogoing.workflow.constant.ProcessConstants;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.ActivitiIllegalArgumentException;
 import org.activiti.engine.DynamicBpmnConstants;
@@ -267,7 +268,7 @@ public class CustomUserTaskActivityBehavior extends UserTaskActivityBehavior {
         }
       }
     }
-
+    //保存抄送人
     if (candidateNotifyUsers != null && !candidateNotifyUsers.isEmpty()) {
       for (String notify : candidateNotifyUsers) {
         Expression userIdExpr = expressionManager.createExpression(notify);
@@ -275,12 +276,12 @@ public class CustomUserTaskActivityBehavior extends UserTaskActivityBehavior {
         if (value instanceof String) {
           List<String> userIds = extractCandidates((String) value);
           for (String userId : userIds) {
-            Context.getCommandContext().getIdentityLinkEntityManager().addUserIdentityLink(task, userId, NOTIFY);
+            Context.getCommandContext().getIdentityLinkEntityManager().addUserIdentityLink(task, userId, ProcessConstants.NOTIFY);
           }
         } else if (value instanceof Collection) {
           Iterator userIdSet = ((Collection) value).iterator();
           while (userIdSet.hasNext()) {
-            Context.getCommandContext().getIdentityLinkEntityManager().addUserIdentityLink(task, (String)userIdSet.next(), NOTIFY);
+            Context.getCommandContext().getIdentityLinkEntityManager().addUserIdentityLink(task, (String)userIdSet.next(), ProcessConstants.NOTIFY);
           }
           throw new ActivitiException("Expression did not resolve to a string or collection of strings");
         }
@@ -340,7 +341,5 @@ public class CustomUserTaskActivityBehavior extends UserTaskActivityBehavior {
     }
 
   }
-  public static final String NOTIFY = "notify";
-
 
 }

@@ -14,7 +14,7 @@ public final class ProcessConstants {
     public static final String MODEL_REVISION = "revision";
     public static final String MODEL_DESCRIPTION = "description";
     public static final String MODEL_KEY = "key";
-
+    public static final String NOTIFY = "notify";
 
     /**
      * 部署流程的bpmn文件的后缀

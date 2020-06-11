@@ -7,8 +7,16 @@ import org.activiti.bpmn.model.UserTask;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @description: 自定义用户节点
+ * @author lhj
+ * @param
+ * @return
+ * @date 2020-6-11 10:50
+ */
 public class CustomUserTask extends UserTask {
 
+    //抄送用户
     protected List<String> candidateNotifyUsers = new ArrayList();
 
     public List<String> getCandidateNotifyUsers() {

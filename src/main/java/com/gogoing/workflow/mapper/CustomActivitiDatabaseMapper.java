@@ -2,6 +2,7 @@ package com.gogoing.workflow.mapper;
 
 import com.gogoing.workflow.domain.ProcessTaskResult;
 import com.gogoing.workflow.domain.TaskFinishQuery;
+import com.gogoing.workflow.domain.TaskQuery;
 import com.gogoing.workflow.domain.TaskUnFinishQuery;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -42,4 +43,18 @@ public interface CustomActivitiDatabaseMapper {
      * @return
      */
     Long selectFinishTaskCount(TaskFinishQuery taskFinishQuery);
+
+    /**
+     *  查询抄送任务
+     * @param taskQuery 查询条件
+     * @return
+     */
+    List<ProcessTaskResult> selectNotifyTask(TaskQuery taskQuery);
+
+    /**
+     *  查询抄送任务数量
+     * @param taskQuery 查询条件
+     * @return
+     */
+    Long selectNotifyTaskCount(TaskQuery taskQuery);
 }

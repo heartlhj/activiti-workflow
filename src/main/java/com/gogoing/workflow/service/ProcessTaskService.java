@@ -10,7 +10,7 @@ import com.gogoing.workflow.domain.*;
 public interface ProcessTaskService {
 
     /**
-     *  查询待审批任务
+     *  查询待审批任务,包含抄送
      * @param taskUnFinishQuery 查询条件
      * @return
      */
@@ -31,10 +31,18 @@ public interface ProcessTaskService {
     Boolean taskReject(ProcessTaskRejectParam processRejectParam);
 
     /**
-     *  查询待审批任务
+     *  查询待审批任务,包含抄送
      * @param taskFinishQuery 查询条件
      * @return
      */
     PageBean<ProcessTaskResult> queryFinishTask(TaskFinishQuery taskFinishQuery);
+
+
+    /**
+     *  查询抄送任务,不包含审批
+     * @param taskQuery 查询条件
+     * @return
+     */
+    PageBean<ProcessTaskResult> queryNotifyTask(TaskQuery taskQuery);
 
 }
